@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { ZaloBotModule } from "./shared/zalo-bot";
 import { DebugService } from "./modules/debug/debug.service";
 import { DebugModule } from "./modules/debug/debug.module";
+import { AqiModule } from "./modules/aqi/aqi.module";
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { DebugModule } from "./modules/debug/debug.module";
       envFilePath: ".env",
     }),
     DebugModule,
+    AqiModule,
   ],
   controllers: [],
   providers: [],

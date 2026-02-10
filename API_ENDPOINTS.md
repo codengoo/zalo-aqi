@@ -14,6 +14,83 @@ Swagger cung cấp:
 
 ---
 
+## GET /aqi/city
+
+Lấy dữ liệu chất lượng không khí của thành phố cụ thể từ IQAir API
+
+**Query Parameters:**
+- `city` (string, required) - Tên thành phố (ví dụ: "Los Angeles")
+- `state` (string, required) - Tên bang/tiểu bang (ví dụ: "California")
+- `country` (string, required) - Tên quốc gia (ví dụ: "USA")
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "City data retrieved successfully",
+  "data": {
+    "city": "Los Angeles",
+    "state": "California",
+    "country": "USA",
+    "location": {
+      "type": "Point",
+      "coordinates": [-118.2437, 34.0522]
+    },
+    "current": {
+      "weather": {
+        "ts": "2026-02-11T10:00:00.000Z",
+        "tp": 25,
+        "pr": 1013,
+        "hu": 45,
+        "ws": 5,
+        "wd": 180,
+        "ic": "01d",
+        "heatIndex": 27
+      },
+      "pollution": {
+        "ts": "2026-02-11T10:00:00.000Z",
+        "aqius": 55,
+        "mainus": "p2",
+        "aqicn": 38,
+        "maincn": "p2",
+        "p2": {
+          "conc": 13.3,
+          "aqius": 55,
+          "aqicn": 38
+        }
+      }
+    }
+  }
+}
+```
+
+**Data Fields:**
+- `aqius` - AQI value (US EPA standard)
+- `aqicn` - AQI value (China MEP standard)
+- `tp` - Temperature (°C)
+- `pr` - Atmospheric pressure (hPa)
+- `hu` - Humidity (%)
+- `ws` - Wind speed (m/s)
+- `wd` - Wind direction (degrees, N=0, E=90, S=180, W=270)
+- `ic` - Weather icon code
+- `heatIndex` - Apparent temperature (°C)
+- `conc` - Pollutant concentration (µg/m³)
+- `mainus` - Main pollutant (US standard)
+- `maincn` - Main pollutant (China standard)
+
+**cURL Example:**
+```bash
+curl "http://localhost:3000/aqi/city?city=Los%20Angeles&state=California&country=USA"
+```
+
+**Error Responses:**
+- `400` - Missing required parameters
+- `500` - API key not configured or IQAir API error
+
+**Note:** Yêu cầu có `IQAIR_API_KEY` trong file `.env`. Đăng ký miễn phí tại: https://www.iqair.com/dashboard/api
+
+---
+
 ## GET /bot-info
 
 Lấy thông tin về bot

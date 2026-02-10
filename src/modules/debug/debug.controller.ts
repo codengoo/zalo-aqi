@@ -4,7 +4,6 @@ import { DebugService } from "./debug.service";
 import { SendMessageDto } from "src/modules/debug/dto";
 
 @ApiTags("Debug Zalo Bot")
-
 @Controller()
 export class DebugController {
   constructor(private readonly debugService: DebugService) {}

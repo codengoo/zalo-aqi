@@ -15,6 +15,7 @@ Chương trình đã được cấu hình để tự động load file `.env` kh
 
 ```env
 ZALO_BOT_TOKEN=your_token_here
+IQAIR_API_KEY=your_iqair_api_key_here
 ```
 
 ## Sử dụng Environment Variables

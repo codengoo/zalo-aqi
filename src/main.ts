@@ -1,17 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Enable validation globally
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
 
   // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Zalo Bot API')
     .setDescription('API documentation for Zalo Bot integration')
     .setVersion('1.0')
-    .addTag('bot', 'Bot information endpoints')
-    .addTag('chat', 'Chat and messaging endpoints')
     .build();
   
   const document = SwaggerModule.createDocument(app, config);
