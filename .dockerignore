@@ -1,0 +1,39 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Build output
+dist
+build
+
+# Environment files
+.env.local
+.env.development
+.env.test
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*.swn
+
+# Testing
+coverage
+*.test.ts
+*.spec.ts
+
+# Documentation
+*.md
+!README.md
+
+# Misc
+.DS_Store
+Thumbs.db
+.cache
+temp
+tmp

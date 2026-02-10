@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  zalo-aqi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zalo-aqi
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
