@@ -1,18 +1,18 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { ZaloBotModule } from "./shared/zalo-bot";
-import { DebugService } from "./modules/debug/debug.service";
-import { DebugModule } from "./modules/debug/debug.module";
-import { AqiModule } from "./modules/aqi/aqi.module";
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AqiModule } from './modules/aqi/aqi.module';
+import { DebugModule } from './modules/debug/debug.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ".env",
+      envFilePath: '.env',
     }),
     DebugModule,
     AqiModule,
+    WebhookModule,
   ],
   controllers: [],
   providers: [],

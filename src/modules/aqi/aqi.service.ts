@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { GetCityDataDto } from './dto';
 import { CityData } from './interfaces';
 
@@ -22,18 +22,27 @@ export class AqiService {
   async getCityData(query: GetCityDataDto): Promise<CityData> {
     const { city, state, country } = query;
 
-    const response = await this.instance.get('/city', {
-      params: {
-        city,
-        state,
-        country,
-      },
-    });
+    try {
+      const response = await this.instance.get('/city', {
+        params: {
+          city,
+          state,
+          country,
+        },
+      });
 
-    if (response.data.status !== 'success') {
-      throw new BadRequestException(response.data?.data?.message || 'Failed to retrieve city data');
+      if (response.data.status !== 'success') {
+        throw new BadRequestException(
+          response.data?.data?.message || 'Failed to retrieve city data',
+        );
+      }
+
+      return response.data.data as CityData;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        console.log(error.response.data);
+      }
     }
-
-    return response.data.data as CityData;
   }
 }
