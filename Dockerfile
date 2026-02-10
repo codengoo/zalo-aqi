@@ -18,6 +18,10 @@ RUN npm run build
 # Production stage
 FROM node:20-alpine AS production
 
+# Install timezone data and set timezone
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Ho_Chi_Minh
+
 WORKDIR /app
 
 # Copy package files
