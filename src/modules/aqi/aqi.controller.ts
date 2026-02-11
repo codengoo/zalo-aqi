@@ -16,4 +16,13 @@ export class AqiController {
     const data = await this.aqiService.getCityData(query);
     return data;
   }
+
+  @Get('world-ranking')
+  @ApiOperation({
+    summary: 'Lấy ranking chất lượng không khí toàn cầu',
+    description: 'Trả về thành phố ô nhiễm nhất, sạch nhất và vị trí của Hà Nội (nếu có)',
+  })
+  async getWorldRanking() {
+    return await this.aqiService.getWorldRanking();
+  }
 }
