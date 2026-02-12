@@ -12,4 +12,10 @@ export class WebhookController {
   async sendCurrentAqi() {
     return this.webhookService.sendCurrentAqi();
   }
+
+  @Get('send-horoscope')
+  @ApiOperation({ summary: 'Fetch horoscope for Ngọ (Horse) and send via Zalo bot' })
+  async sendHoroscope() {
+    return this.webhookService.sendHoroscope();
+  }
 }

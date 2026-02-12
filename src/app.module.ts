@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AqiModule } from './modules/aqi/aqi.module';
 import { DebugModule } from './modules/debug/debug.module';
+import { HoroscopeModule } from './modules/horoscope/horoscope.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { WebhookModule } from './modules/webhook/webhook.module';
     DebugModule,
     AqiModule,
     WebhookModule,
+    HoroscopeModule,
   ],
   controllers: [],
   providers: [],
