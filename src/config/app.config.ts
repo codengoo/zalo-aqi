@@ -1,4 +1,5 @@
 import { VietnameseZodiac } from 'src/modules/horoscope/interfaces';
+import { VehicleType } from 'src/modules/violation/interfaces';
 
 export default () => ({
   // API Endpoints
@@ -33,11 +34,11 @@ export default () => ({
     defaultViolationPlateNumbers: [
       {
         plateNumber: '30E43807',
-        vehicleType: 'CAR',
+        vehicleType: VehicleType.CAR,
       },
       {
         plateNumber: '29Z67125',
-        vehicleType: 'MOTORBIKE',
+        vehicleType: VehicleType.MOTORBIKE,
       },
     ],
   },

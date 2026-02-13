@@ -19,13 +19,10 @@ export class ViolationService {
     lookupDto: LookupMultipleViolationDto,
   ): Promise<MultipleViolationResponseDto> {
     try {
-      this.logger.log(`Tra cứu vi phạm cho ${lookupDto.plateNumbers.length} biển số`);
+      console.log(lookupDto);
 
-      const response = await axios.post<MultipleViolationResponseDto>(this.API_URL, lookupDto, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      this.logger.log(`Tra cứu vi phạm cho ${lookupDto.plateNumbers.length} biển số`);
+      const response = await axios.post<MultipleViolationResponseDto>(this.API_URL, lookupDto);
 
       return response.data;
     } catch (error) {
