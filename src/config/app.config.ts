@@ -17,7 +17,7 @@ export default () => ({
       randomWordApiUrl: 'https://random-word-api.herokuapp.com/word',
     },
     violation: {
-      apiUrl: 'http://34.126.134.11:3001/violations/lookup/multiple',
+      apiUrl: 'http://34.126.134.11:3001/violations/lookup',
     },
   },
 
