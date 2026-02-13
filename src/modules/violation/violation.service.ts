@@ -1,11 +1,16 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { LookupMultipleViolationDto, MultipleViolationResponseDto } from './dto';
 
 @Injectable()
 export class ViolationService {
   private readonly logger = new Logger(ViolationService.name);
-  private readonly API_URL = 'http://34.126.134.11:3001/violations/lookup/multiple';
+  private readonly API_URL: string;
+
+  constructor(private configService: ConfigService) {
+    this.API_URL = this.configService.get<string>('api.violation.apiUrl');
+  }
 
   /**
    * Tra cứu vi phạm giao thông

@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { GetHoroscopeDto } from './dto';
@@ -6,7 +7,7 @@ import { HoroscopeData, VietnameseZodiac } from './interfaces';
 
 @Injectable()
 export class HoroscopeService {
-  private readonly baseUrl = 'https://thientue.vn/12-con-giap';
+  private readonly baseUrl: string;
 
   // Mapping từ enum sang URL path
   private readonly zodiacUrlMap: Record<VietnameseZodiac, string> = {
@@ -38,6 +39,10 @@ export class HoroscopeService {
     [VietnameseZodiac.TUAT]: 'Tuất',
     [VietnameseZodiac.HOI]: 'Hợi',
   };
+
+  constructor(private readonly configService: ConfigService) {
+    this.baseUrl = this.configService.get<string>('api.horoscope.baseUrl');
+  }
 
   async getHoroscope(query: GetHoroscopeDto): Promise<HoroscopeData> {
     const { zodiacSign } = query;

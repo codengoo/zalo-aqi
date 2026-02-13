@@ -1,16 +1,24 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { WordDefinition, WordOfTheDay } from './interfaces';
 
 @Injectable()
 export class WordService {
   private readonly logger = new Logger(WordService.name);
-  private readonly CAMBRIDGE_URL = 'https://dictionary.cambridge.org';
-  private readonly DICTIONARY_API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
-  private readonly RANDOM_WORD_API_URL = 'https://random-word-api.herokuapp.com/word';
+  private readonly CAMBRIDGE_URL: string;
+  private readonly DICTIONARY_API_URL: string;
+  private readonly RANDOM_WORD_API_URL: string;
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {
+    this.CAMBRIDGE_URL = this.configService.get<string>('api.word.cambridgeUrl');
+    this.DICTIONARY_API_URL = this.configService.get<string>('api.word.dictionaryApiUrl');
+    this.RANDOM_WORD_API_URL = this.configService.get<string>('api.word.randomWordApiUrl');
+  }
 
   /**
    * Get random word from API

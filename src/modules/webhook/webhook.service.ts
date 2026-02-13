@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { MessageFormatService, ZaloBotService } from '../../shared';
 import { AqiService } from '../aqi/aqi.service';
 import { HoroscopeService } from '../horoscope/horoscope.service';
 import { VietnameseZodiac } from '../horoscope/interfaces';
-import { VehicleType } from '../violation/interfaces';
 import { ViolationService } from '../violation/violation.service';
 import { WordService } from '../word/word.service';
 
 @Injectable()
 export class WebhookService {
-  private readonly CHAT_ID = 'ae3d13526a03835dda12';
+  private readonly CHAT_ID: string;
+  private readonly defaultAqiCity: { city: string; state: string; country: string };
+  private readonly defaultZodiac: VietnameseZodiac;
+  private readonly defaultViolationPlates: any[];
 
   constructor(
     private readonly aqiService: AqiService,
@@ -18,15 +21,17 @@ export class WebhookService {
     private readonly violationService: ViolationService,
     private readonly messageFormatService: MessageFormatService,
     private readonly zaloBotService: ZaloBotService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.CHAT_ID = this.configService.get<string>('webhook.chatId');
+    this.defaultAqiCity = this.configService.get('webhook.defaultAqiCity');
+    this.defaultZodiac = VietnameseZodiac[this.configService.get<string>('webhook.defaultZodiac')];
+    this.defaultViolationPlates = this.configService.get('webhook.defaultViolationPlateNumbers');
+  }
 
   async sendCurrentAqi() {
-    // Fetch AQI data for Hanoi
-    const aqiData = await this.aqiService.getCityData({
-      city: 'Hanoi',
-      state: 'Ha Noi',
-      country: 'Vietnam',
-    });
+    // Fetch AQI data for default city
+    const aqiData = await this.aqiService.getCityData(this.defaultAqiCity);
 
     // Fetch world ranking data
     const worldRanking = await this.aqiService.getWorldRanking();
@@ -50,9 +55,9 @@ export class WebhookService {
   }
 
   async sendHoroscope() {
-    // Fetch horoscope data for Ngọ (Horse) zodiac
+    // Fetch horoscope data for default zodiac
     const horoscopeData = await this.horoscopeService.getHoroscope({
-      zodiacSign: VietnameseZodiac.NGO,
+      zodiacSign: this.defaultZodiac,
     });
 
     // Format message
@@ -94,18 +99,9 @@ export class WebhookService {
 
   async sendViolationLookup() {
     try {
-      // Lookup violation
+      // Lookup violation using default plate numbers
       const violationData = await this.violationService.lookupViolations({
-        plateNumbers: [
-          {
-            plateNumber: '30E43807',
-            vehicleType: VehicleType.CAR,
-          },
-          {
-            plateNumber: '29Z67125',
-            vehicleType: VehicleType.MOTORBIKE,
-          },
-        ],
+        plateNumbers: this.defaultViolationPlates,
       });
 
       // Format messages (one per plate number)

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import appConfig from './config/app.config';
 import { AqiModule } from './modules/aqi/aqi.module';
 import { DebugModule } from './modules/debug/debug.module';
 import { HoroscopeModule } from './modules/horoscope/horoscope.module';
@@ -12,6 +13,7 @@ import { WordModule } from './modules/word/word.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      load: [appConfig],
     }),
     DebugModule,
     AqiModule,

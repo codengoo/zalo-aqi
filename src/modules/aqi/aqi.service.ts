@@ -7,13 +7,16 @@ import { CityData } from './interfaces';
 
 @Injectable()
 export class AqiService {
-  private readonly baseUrl = 'https://api.airvisual.com/v2';
+  private readonly worldRankingUrl: string;
   private readonly instance: AxiosInstance;
 
-  constructor(private configService: ConfigService) {
-    const apiKey = this.configService.get<string>('IQAIR_API_KEY');
+  constructor(private readonly configService: ConfigService) {
+    this.worldRankingUrl = this.configService.get<string>('api.aqi.worldRankingUrl');
+    const baseUrl = this.configService.get<string>('api.aqi.baseUrl');
+    const apiKey = this.configService.get<string>('api.aqi.apiKey');
+
     this.instance = axios.create({
-      baseURL: this.baseUrl,
+      baseURL: baseUrl,
       params: {
         key: apiKey,
       },
@@ -58,7 +61,7 @@ export class AqiService {
 
   async getWorldRanking(): Promise<WorldRankingResponseDto> {
     try {
-      const response = await axios.get('https://www.iqair.com/world-air-quality-ranking', {
+      const response = await axios.get(this.worldRankingUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         },
