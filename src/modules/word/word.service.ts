@@ -40,7 +40,6 @@ export class WordService {
   public async getWordDefinition(word: string): Promise<WordDefinition[]> {
     try {
       this.logger.log(`Fetching definition for word: ${word}`);
-
       const response = await firstValueFrom(
         this.httpService.get(`${this.DICTIONARY_API_URL}/${encodeURIComponent(word)}`),
       );
@@ -59,20 +58,40 @@ export class WordService {
     wordOfTheDay: WordOfTheDay;
     definition: WordDefinition[];
   }> {
-    const word = await this.getRandomWord();
+    const maxRetries = 10;
+    let attempts = 0;
 
-    // Get word of the day if no word specified
-    const wordOfTheDay: WordOfTheDay = {
-      word: word,
-      cambridgeUrl: `${this.CAMBRIDGE_URL}/dictionary/english/${word}`,
-    };
+    while (attempts < maxRetries) {
+      attempts++;
 
-    // Get definition from dictionary API
-    const definition = await this.getWordDefinition(wordOfTheDay.word);
+      try {
+        const word = await this.getRandomWord();
+        this.logger.log(`Attempt ${attempts}: Trying word "${word}"`);
 
-    return {
-      wordOfTheDay,
-      definition,
-    };
+        // Get word of the day
+        const wordOfTheDay: WordOfTheDay = {
+          word: word,
+          cambridgeUrl: `${this.CAMBRIDGE_URL}/dictionary/english/${word}`,
+        };
+
+        // Get definition from dictionary API
+        const definition = await this.getWordDefinition(wordOfTheDay.word);
+
+        this.logger.log(`Successfully found definition for "${word}" on attempt ${attempts}`);
+        return {
+          wordOfTheDay,
+          definition,
+        };
+      } catch (error) {
+        this.logger.warn(`Attempt ${attempts} failed: ${error.message}`);
+
+        if (attempts >= maxRetries) {
+          this.logger.error(`Failed to get word definition after ${maxRetries} attempts`);
+          throw new Error(`Could not find any word with definition after ${maxRetries} attempts`);
+        }
+
+        // Continue to next iteration to try another word
+      }
+    }
   }
 }
