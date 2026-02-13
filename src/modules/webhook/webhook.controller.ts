@@ -18,4 +18,10 @@ export class WebhookController {
   async sendHoroscope() {
     return this.webhookService.sendHoroscope();
   }
+
+  @Get('send-word-of-the-day')
+  @ApiOperation({ summary: 'Fetch Word of the Day and send via Zalo bot' })
+  async sendWordOfTheDay() {
+    return this.webhookService.sendWordOfTheDay();
+  }
 }

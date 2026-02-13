@@ -3,12 +3,14 @@ import { ZaloBotService } from '../../shared';
 import { AqiService } from '../aqi/aqi.service';
 import { HoroscopeService } from '../horoscope/horoscope.service';
 import { VietnameseZodiac } from '../horoscope/interfaces';
+import { WordService } from '../word/word.service';
 
 @Injectable()
 export class WebhookService {
   constructor(
     private readonly aqiService: AqiService,
     private readonly horoscopeService: HoroscopeService,
+    private readonly wordService: WordService,
     private readonly zaloBotService: ZaloBotService,
   ) {}
 
@@ -123,5 +125,77 @@ ${generalInterpretation}`;
       horoscopeData,
       message: result,
     };
+  }
+
+  async sendWordOfTheDay() {
+    try {
+      // Get word of the day with definition
+      const wordInfo = await this.wordService.getWordInfo();
+
+      // Format message for Zalo
+      const message = this.formatWordForZalo(wordInfo);
+
+      // Send message to specific user
+      const chatId = 'ae3d13526a03835dda12';
+      const result = await this.zaloBotService.sendMessage(chatId, message);
+
+      return {
+        success: true,
+        wordInfo,
+        message: result,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Format word information for Zalo message
+   */
+  private formatWordForZalo(wordInfo: {
+    wordOfTheDay: { word: string; cambridgeUrl: string };
+    definition: any[];
+  }): string {
+    const { wordOfTheDay, definition } = wordInfo;
+    const firstDef = definition[0];
+
+    if (!firstDef) {
+      return `📚 Word: ${wordOfTheDay.word}\n\nNo definition found.`;
+    }
+
+    let message = `📚 WORD OF THE DAY\n\n`;
+    message += `📖 Word: ${firstDef.word}\n`;
+
+    if (firstDef.phonetic) {
+      message += `🔊 Phonetic: ${firstDef.phonetic}\n`;
+    }
+
+    message += `\n`;
+
+    // Add meanings (limit to first 2 for brevity)
+    if (firstDef.meanings && firstDef.meanings.length > 0) {
+      const meaningsToShow = firstDef.meanings.slice(0, 2);
+
+      meaningsToShow.forEach((meaning, idx) => {
+        message += `${idx + 1}. ${meaning.partOfSpeech.toUpperCase()}\n`;
+
+        // Add first 2 definitions
+        const defsToShow = meaning.definitions.slice(0, 2);
+        defsToShow.forEach((def) => {
+          message += `   • ${def.definition}\n`;
+          if (def.example) {
+            message += `     Example: "${def.example}"\n`;
+          }
+        });
+        message += `\n`;
+      });
+    }
+
+    message += `🔗 ${wordOfTheDay.cambridgeUrl}`;
+
+    return message;
   }
 }
