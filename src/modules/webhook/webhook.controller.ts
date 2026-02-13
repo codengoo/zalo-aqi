@@ -24,4 +24,10 @@ export class WebhookController {
   async sendWordOfTheDay() {
     return this.webhookService.sendWordOfTheDay();
   }
+
+  @Get('send-violation')
+  @ApiOperation({ summary: 'Lookup traffic violation and send via Zalo bot' })
+  async sendViolation() {
+    return this.webhookService.sendViolationLookup();
+  }
 }
