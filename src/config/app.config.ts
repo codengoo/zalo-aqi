@@ -33,11 +33,11 @@ export default () => ({
     defaultZodiac: VietnameseZodiac.NGO,
     defaultViolationPlateNumbers: [
       {
-        plateNumber: '30E43807',
+        plateNumber: '88C24378',
         vehicleType: VehicleType.CAR,
       },
       {
-        plateNumber: '29Z67125',
+        plateNumber: '29Z167125',
         vehicleType: VehicleType.MOTORBIKE,
       },
     ],
