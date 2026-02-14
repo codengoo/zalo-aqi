@@ -25,7 +25,9 @@ export class WebhookService {
   ) {
     this.CHAT_ID = this.configService.get<string>('webhook.chatId');
     this.defaultAqiCity = this.configService.get('webhook.defaultAqiCity');
-    this.defaultZodiac = VietnameseZodiac[this.configService.get<string>('webhook.defaultZodiac')];
+    this.defaultZodiac = this.configService.get<string>(
+      'webhook.defaultZodiac',
+    ) as VietnameseZodiac;
     this.defaultViolationPlates = this.configService.get('webhook.defaultViolationPlateNumbers');
   }
 
